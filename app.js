@@ -5,9 +5,9 @@ const btnGet = document.getElementById("get")
 const btnRandom = document.getElementById("random")
 const container = document.getElementById("container")
 let currentData = null
-const backBtn = document.getElementById("backBtn")
 
 async function getData(date = "") {
+  container.innerHTML = "Loading..."
   let url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`
   if (date) {
     url += `&date=${date}`
@@ -22,11 +22,27 @@ async function getData(date = "") {
   }
 }
 function showData(data) {
+  container.style.display = "block"
+  let shortText = data.explanation.slice(0, 150)
   container.innerHTML = `
     <h2>${data.title}</h2>
     <img src="${data.url}" style="max-width: 500px;" />
-    <p>${data.explanation}</p>
-  `;
+    <p id="text">${shortText}...</p>
+    <button id="toggleBtn">Read More</button>
+  `
+    let expanded = false
+    document.getElementById("toggleBtn").onclick = () => {
+      let text = document.getElementById("text")
+
+      if (!expanded) {
+        text.innerText = data.explanation
+        document.getElementById("toggleBtn").innerText = "Read Less"
+      } else {
+        text.innerText = shortText + "..."
+        document.getElementById("toggleBtn").innerText = "Read More"
+      }
+      expanded = !expanded
+    }
 }
 function getRandomDate() {
   let start = new Date(2015, 0, 1).getTime()
@@ -60,6 +76,8 @@ function saveFav() {
   localStorage.setItem("favs", JSON.stringify(favs))
 }
 function showFavs() {
+  container.style.display = "grid"
+  container.innerHTML = "<h2>Favorites</h2>"
   let favs = JSON.parse(localStorage.getItem("favs")) || []
   container.innerHTML = ""
   favs.forEach(item => {
@@ -69,6 +87,10 @@ function showFavs() {
       <img src="${item.url}" style="max-width:200px;" />
       <p>${item.date}</p>
     `
+  div.onclick = () => {
+    currentData = item
+    showData(item)
+  }
     container.appendChild(div)
   })
 }

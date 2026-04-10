@@ -57,7 +57,6 @@ display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:20px
 }
-
 #container div{
 background:#111827;
 padding:10px;
@@ -78,8 +77,7 @@ font-size:48px;
 margin:0;
 font-weight:bold;
 background:linear-gradient(90deg,#c4b5fd,#fbbf24);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
 letter-spacing:2px
 }
+
 
